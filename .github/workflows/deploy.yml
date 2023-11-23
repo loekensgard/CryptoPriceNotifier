@@ -27,5 +27,18 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/nok-notifier:${{ github.sha }}
+        tags: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
         file: ./Dockerfile
+
+      - name: 'Deploy NOK notifier'
+          uses: 'azure/aci-deploy@v1'
+          with:
+            resource-group: ${{ secrets.RESOURCE_GROUP }}
+            image: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
+            registry-login-server: https://discordbotspricecheck.azurecr.io/
+            registry-username: ${{ secrets.AZR_USERNAME }}
+            registry-password: ${{ secrets.AZR_PASSWORD }}
+            name: nok-notifier
+            location: 'norway east'
+            environment-variables: CRYPTO=eth CRYPTOGECKO=ethereum
+            secure-environment-variables: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
