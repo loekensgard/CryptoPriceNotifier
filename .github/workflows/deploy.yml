@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy container app to Azure Web App - notfier-nok
+name: Build and deploy container
 
 on:
   push:
@@ -23,14 +20,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://discordbotspricecheck.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_6544115da8ae4dd4b19b511599625255 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_fdad6d004279479c858dc87763ce2f3e }}
+        username: ${{ secrets.AZR_USERNAME }}
+        password: ${{ secrets.AZR_PASSWORD }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: discordbotspricecheck.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_6544115da8ae4dd4b19b511599625255 }}/latest:${{ github.sha }}
+        tags: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/latest:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -38,7 +35,11 @@ jobs:
     needs: build
     environment:
       name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    env:
+      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+      CRYPTO: 'ETH'
+      CRYPTOGECKO: 'ethereum'
+
 
     steps:
     - name: Deploy to Azure Web App
@@ -48,4 +49,4 @@ jobs:
         app-name: 'notfier-nok'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_810c5c2acf94469299a5426ebef7c892 }}
-        images: 'discordbotspricecheck.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_6544115da8ae4dd4b19b511599625255 }}/latest:${{ github.sha }}'
+        images: 'discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/latest:${{ github.sha }}'
