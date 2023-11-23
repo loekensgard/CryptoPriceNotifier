@@ -2,6 +2,7 @@
 import { Client, IntentsBitField } from "discord.js";
 import "dotenv/config";
 import { getMedianPriceFiri, getMedianPriceCoinGecko } from "./price.js";
+import { OldPriceHigherThanNewPrice } from "./priceComparer.js";
 
 console.log("Bot is starting...");
 
@@ -36,33 +37,38 @@ client.on("ready", () => {
           const oldPrice = me.nickname?.split(" ")[1];
 
           // Fetch the median prices from Firi and CoinGecko
-          const medianFiri = await getMedianPriceFiri(cryptofiri, fiat);
+          const medianFiri = await getMedianPriceFiri(cryptofiri, "nok");
           const fixedMedianFiri = medianFiri.toFixed(0);
           const medianCoinGecko = await getMedianPriceCoinGecko(
             cryptogecko,
-            fiatgecko
+            "usd"
           );
           const fixedMedianCoinGecko = medianCoinGecko.toFixed(0);
 
           //TODO: add emoji
-          if (oldPrice < medianFiri) {
+          const emoji = "↗";
+          console.log(oldPrice);
+          console.log(fixedMedianFiri);
+
+          if (OldPriceHigherThanNewPrice(oldPrice, fixedMedianFiri)) {
+            emoji = "↘";
           }
 
           // Update the bot's presence
           client.user?.setPresence({
             activities: [
               {
-                name: `${cryptofiri} $${fixedMedianCoinGecko}`,
+                name: `${cryptofiri} $${fixedMedianCoinGecko} ${emoji}`,
                 type: 4,
               },
             ],
           });
 
           // Update the bot's nickname
-          me.setNickname(`${cryptofiri} ${fixedMedianFiri},-`)
+          me.setNickname(`${cryptofiri} ${fixedMedianFiri},- ${emoji}`)
             .then(() =>
               console.log(
-                `Set nickname to ${cryptofiri} ${fixedMedianFiri} ${fiat} in guild: ${guild.name}`
+                `Set nickname to ${cryptofiri} ${fixedMedianFiri};- in guild: ${guild.name}`
               )
             )
             .catch(console.error);
