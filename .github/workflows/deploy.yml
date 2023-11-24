@@ -44,5 +44,6 @@ jobs:
           registry-password: ${{ secrets.AZR_PASSWORD }}
           name: nok-notifier
           location: "norway east"
+          dns-name-label: "nok-notifier"
           environment-variables: CRYPTO=eth CRYPTOGECKO=ethereum
           secure-environment-variables: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
