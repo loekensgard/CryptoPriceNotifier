@@ -13,11 +13,5 @@ export async function fetchMedianPriceFiri(crypto, fiat) {
   const ask = Number(response.ask);
   const median = (bid + ask) / 2;
 
-  const options = {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  };
-
-  return median.toLocaleString("nb-NO", options);
+  return median;
 }

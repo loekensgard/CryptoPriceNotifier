@@ -12,6 +12,7 @@ import {
   getCryptoGecko,
   getInterval,
 } from "./utils/env.js";
+import { formatNumber } from "./utils/formatNumberService.js";
 
 console.log("Bot is starting...");
 
@@ -45,10 +46,13 @@ client.on("ready", () => {
 
         try {
           // Fetch the median prices from Firi and CoinGecko
-          const medianFiri = await fetchMedianPriceFiri(cryptofiri, "nok");
-          const medianCoinGecko = await fetchMedianPriceCoinGecko(
-            cryptogecko,
-            "usd"
+          const medianFiri = formatNumber(
+            await fetchMedianPriceFiri(cryptofiri, "nok"),
+            "nb-NO"
+          );
+          const medianCoinGecko = formatNumber(
+            await fetchMedianPriceCoinGecko(cryptogecko, "usd"),
+            "de-DE"
           );
           const changeCoinGecko = await fetch24HChange(cryptogecko, "usd");
 

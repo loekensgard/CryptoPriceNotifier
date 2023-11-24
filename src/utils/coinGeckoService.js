@@ -8,14 +8,7 @@ export async function fetchMedianPriceCoinGecko(crypto, fiat) {
   }
 
   const response = await resp.json();
-
-  const options = {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  };
-
-  return response[crypto][fiat].toLocaleString("en-US", options);
+  return response[crypto][fiat];
 }
 
 export async function fetch24HChange(crypto, fiat) {
