@@ -10,6 +10,7 @@ console.log("Bot is starting...");
 const token = process.env.DISCORD_TOKEN;
 const cryptofiri = process.env.CRYPTO ?? "ETH";
 const cryptogecko = process.env.CRYPTOGECKO ?? "ethereum";
+const interval = process.env.INTERVAL ?? 120000;
 
 // Initialize Discord client
 const client = new Client({
@@ -74,7 +75,7 @@ client.on("ready", () => {
         }
       }
     });
-  }, 10000);
+  }, interval);
 });
 
 // Event handler for rate limit warnings
