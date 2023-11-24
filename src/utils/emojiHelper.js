@@ -1,16 +1,8 @@
-export function OldPriceHigherThanNewPrice(oldPrice, newPrice) {
-  const oldPriceNum = Number(oldPrice);
-  if (isNaN(oldPriceNum)) {
-    return false;
-  }
-  return oldPriceNum > newPrice;
-}
-
-export function getEmojiBasedOnPriceChange(oldPriceFromNickname, newPrice) {
-  const removeDollars = oldPriceFromNickname.replace("$", "");
+export function getEmojiBasedOnPriceChange(change) {
+  console.log(change);
 
   let emoji = "↗";
-  if (OldPriceHigherThanNewPrice(removeDollars, newPrice)) {
+  if (change < 0) {
     emoji = "↘";
   }
   return emoji;

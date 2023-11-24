@@ -1,9 +1,10 @@
 // Import necessary modules
 import { Client, IntentsBitField } from "discord.js";
 import {
-  getMedianPriceFiri,
-  getMedianPriceCoinGecko,
-} from "./utils/priceApiHelper.js";
+  fetchMedianPriceCoinGecko,
+  fetch24HChange,
+} from "./utils/coinGeckoService.js";
+import { fetchMedianPriceFiri } from "./utils/firiService.js";
 import { getEmojiBasedOnPriceChange } from "./utils/emojiHelper.js";
 import {
   getToken,
@@ -44,33 +45,25 @@ client.on("ready", () => {
 
         try {
           // Fetch the median prices from Firi and CoinGecko
-          const medianFiri = await getMedianPriceFiri(cryptofiri, "nok");
-          const medianCoinGecko = await getMedianPriceCoinGecko(
+          const medianFiri = await fetchMedianPriceFiri(cryptofiri, "nok");
+          const medianCoinGecko = await fetchMedianPriceCoinGecko(
             cryptogecko,
             "usd"
           );
+          const changeCoinGecko = await fetch24HChange(cryptogecko, "usd");
 
           // Check if the price has gone up or down and return emoji accordingly
-          const emoji = getEmojiBasedOnPriceChange(
-            me.nickname?.split(" ")[1],
-            medianCoinGecko
-          );
+          const emoji = getEmojiBasedOnPriceChange(changeCoinGecko);
 
           // Update the bot's presence
-          client.user
-            ?.setPresence({
-              activities: [
-                {
-                  name: `${medianFiri} NOK`,
-                  type: 4,
-                },
-              ],
-            })
-            .then(() =>
-              console.log(
-                `Set presence to ${cryptofiri} ${medianFiri} NOK in guild: ${guild.name}`
-              )
-            );
+          client.user?.setPresence({
+            activities: [
+              {
+                name: `${medianFiri} NOK`,
+                type: 4,
+              },
+            ],
+          });
 
           // Update the bot's nickname
           me.setNickname(`${cryptofiri} $${medianCoinGecko} (${emoji})`)
