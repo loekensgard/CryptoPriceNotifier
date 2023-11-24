@@ -40,8 +40,6 @@ client.on("ready", () => {
         }
 
         try {
-          const oldPrice = me.nickname?.split(" ")[1];
-
           // Fetch the median prices from Firi and CoinGecko
           const medianFiri = await getMedianPriceFiri(cryptofiri, "nok");
           const fixedMedianFiri = medianFiri.toFixed(0);
@@ -53,6 +51,7 @@ client.on("ready", () => {
           const fixedMedianCoinGecko = medianCoinGecko.toFixed(0);
 
           // Check if the price has gone up or down
+          const oldPrice = me.nickname?.split(" ")[1];
           const emoji = "↗";
           if (OldPriceHigherThanNewPrice(oldPrice, fixedMedianFiri)) {
             emoji = "↘";
@@ -62,17 +61,17 @@ client.on("ready", () => {
           client.user?.setPresence({
             activities: [
               {
-                name: `${cryptofiri} $${fixedMedianCoinGecko} (${emoji})`,
+                name: `${cryptofiri} ${fixedMedianFiri} NOK (${emoji})`,
                 type: 4,
               },
             ],
           });
 
           // Update the bot's nickname
-          me.setNickname(`${cryptofiri} ${fixedMedianFiri},- (${emoji})`)
+          me.setNickname(`${cryptofiri} $${fixedMedianCoinGecko} (${emoji})`)
             .then(() =>
               console.log(
-                `Set nickname to ${cryptofiri} ${fixedMedianFiri};- in guild: ${guild.name}`
+                `Set nickname to ${cryptofiri} $${fixedMedianCoinGecko} in guild: ${guild.name}`
               )
             )
             .catch(console.error);
