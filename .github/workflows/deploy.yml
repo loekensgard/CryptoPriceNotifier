@@ -8,37 +8,41 @@ on:
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Log in to registry
-      uses: docker/login-action@v2
-      with:
-        registry: https://discordbotspricecheck.azurecr.io/
-        username: ${{ secrets.AZR_USERNAME }}
-        password: ${{ secrets.AZR_PASSWORD }}
+      - name: Log in to registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://discordbotspricecheck.azurecr.io/
+          username: ${{ secrets.AZR_USERNAME }}
+          password: ${{ secrets.AZR_PASSWORD }}
 
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
-      with:
-        push: true
-        tags: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
-        file: ./Dockerfile
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
+          file: ./Dockerfile
 
-    - name: 'Deploy NOK notifier'
-      uses: 'azure/aci-deploy@v1'
-      with:
-        resource-group: ${{ secrets.RESOURCE_GROUP }}
-        image: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
-        registry-login-server: https://discordbotspricecheck.azurecr.io/
-        registry-username: ${{ secrets.AZR_USERNAME }}
-        registry-password: ${{ secrets.AZR_PASSWORD }}
-        name: nok-notifier
-        location: 'norway east'
-        environment-variables: CRYPTO=eth CRYPTOGECKO=ethereum
-        secure-environment-variables: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: "Deploy NOK notifier"
+        uses: "azure/aci-deploy@v1"
+        with:
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
+          image: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
+          registry-login-server: https://discordbotspricecheck.azurecr.io/
+          registry-username: ${{ secrets.AZR_USERNAME }}
+          registry-password: ${{ secrets.AZR_PASSWORD }}
+          name: nok-notifier
+          location: "norway east"
+          environment-variables: CRYPTO=eth CRYPTOGECKO=ethereum
+          secure-environment-variables: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
