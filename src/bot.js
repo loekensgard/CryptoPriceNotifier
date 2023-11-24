@@ -61,7 +61,7 @@ client.on("ready", () => {
           client.user?.setPresence({
             activities: [
               {
-                name: `${cryptofiri} ${fixedMedianFiri} NOK (${emoji})`,
+                name: `${fixedMedianFiri} NOK (${emoji})`,
                 type: 4,
               },
             ],
