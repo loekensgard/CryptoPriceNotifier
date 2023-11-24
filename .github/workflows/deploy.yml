@@ -39,7 +39,7 @@ jobs:
         with:
           resource-group: ${{ secrets.RESOURCE_GROUP }}
           image: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
-          registry-login-server: https://discordbotspricecheck.azurecr.io/
+          registry-login-server: discordbotspricecheck.azurecr.io
           registry-username: ${{ secrets.AZR_USERNAME }}
           registry-password: ${{ secrets.AZR_PASSWORD }}
           name: nok-notifier
