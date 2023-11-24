@@ -1,16 +1,21 @@
 // Import necessary modules
 import { Client, IntentsBitField } from "discord.js";
-import "dotenv/config";
-import { getMedianPriceFiri, getMedianPriceCoinGecko } from "./price.js";
-import { OldPriceHigherThanNewPrice } from "./priceComparer.js";
+import { getMedianPriceFiri, getMedianPriceCoinGecko } from "./utils/price.js";
+import { OldPriceHigherThanNewPrice } from "./utils/priceComparer.js";
+import {
+  getToken,
+  getCryptoFiri,
+  getCryptoGecko,
+  getInterval,
+} from "./utils/env.js";
 
 console.log("Bot is starting...");
 
 // Load environment variables
-const token = process.env.DISCORD_TOKEN;
-const cryptofiri = process.env.CRYPTO ?? "ETH";
-const cryptogecko = process.env.CRYPTOGECKO ?? "ethereum";
-const interval = process.env.INTERVAL ?? 120000;
+const token = getToken();
+const cryptofiri = getCryptoFiri();
+const cryptogecko = getCryptoGecko();
+const interval = getInterval();
 
 // Initialize Discord client
 const client = new Client({
@@ -40,6 +45,7 @@ client.on("ready", () => {
           // Fetch the median prices from Firi and CoinGecko
           const medianFiri = await getMedianPriceFiri(cryptofiri, "nok");
           const fixedMedianFiri = medianFiri.toFixed(0);
+
           const medianCoinGecko = await getMedianPriceCoinGecko(
             cryptogecko,
             "usd"
