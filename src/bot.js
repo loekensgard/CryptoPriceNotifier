@@ -45,11 +45,8 @@ client.on("ready", () => {
           );
           const fixedMedianCoinGecko = medianCoinGecko.toFixed(0);
 
-          //TODO: add emoji
+          // Check if the price has gone up or down
           const emoji = "↗";
-          console.log(oldPrice);
-          console.log(fixedMedianFiri);
-
           if (OldPriceHigherThanNewPrice(oldPrice, fixedMedianFiri)) {
             emoji = "↘";
           }

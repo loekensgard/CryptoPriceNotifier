@@ -47,3 +47,17 @@ jobs:
           dns-name-label: "nok-notifier"
           environment-variables: CRYPTO=eth CRYPTOGECKO=ethereum
           secure-environment-variables: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
+
+      - name: "Deploy USD notifier"
+        uses: "azure/aci-deploy@v1"
+        with:
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
+          image: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
+          registry-login-server: discordbotspricecheck.azurecr.io
+          registry-username: ${{ secrets.AZR_USERNAME }}
+          registry-password: ${{ secrets.AZR_PASSWORD }}
+          name: usd-notifier
+          location: "norway east"
+          dns-name-label: "usd-notifier"
+          environment-variables: CRYPTO=btc CRYPTOGECKO=bitcoin
+          secure-environment-variables: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}
