@@ -13,7 +13,13 @@ export async function getMedianPriceFiri(crypto, fiat) {
   const ask = Number(response.ask);
   const median = (bid + ask) / 2;
 
-  return median;
+  const options = {
+    style: "decimal",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  };
+
+  return median.toLocaleString("nb-NO", options);
 }
 
 export async function getMedianPriceCoinGecko(crypto, fiat) {
@@ -27,5 +33,11 @@ export async function getMedianPriceCoinGecko(crypto, fiat) {
 
   const response = await resp.json();
 
-  return response[crypto][fiat];
+  const options = {
+    style: "decimal",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  };
+
+  return response[crypto][fiat].toLocaleString("en-US", options);
 }

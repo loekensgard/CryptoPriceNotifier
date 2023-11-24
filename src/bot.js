@@ -1,7 +1,10 @@
 // Import necessary modules
 import { Client, IntentsBitField } from "discord.js";
-import { getMedianPriceFiri, getMedianPriceCoinGecko } from "./utils/price.js";
-import { OldPriceHigherThanNewPrice } from "./utils/priceComparer.js";
+import {
+  getMedianPriceFiri,
+  getMedianPriceCoinGecko,
+} from "./utils/priceApiHelper.js";
+import { getEmojiBasedOnPriceChange } from "./utils/emojiHelper.js";
 import {
   getToken,
   getCryptoFiri,
@@ -42,36 +45,38 @@ client.on("ready", () => {
         try {
           // Fetch the median prices from Firi and CoinGecko
           const medianFiri = await getMedianPriceFiri(cryptofiri, "nok");
-          const fixedMedianFiri = medianFiri.toFixed(0);
-
           const medianCoinGecko = await getMedianPriceCoinGecko(
             cryptogecko,
             "usd"
           );
-          const fixedMedianCoinGecko = medianCoinGecko.toFixed(0);
 
-          // Check if the price has gone up or down
-          const oldPrice = me.nickname?.split(" ")[1];
-          const emoji = "↗";
-          if (OldPriceHigherThanNewPrice(oldPrice, fixedMedianFiri)) {
-            emoji = "↘";
-          }
+          // Check if the price has gone up or down and return emoji accordingly
+          const emoji = getEmojiBasedOnPriceChange(
+            me.nickname?.split(" ")[1],
+            medianCoinGecko
+          );
 
           // Update the bot's presence
-          client.user?.setPresence({
-            activities: [
-              {
-                name: `${fixedMedianFiri} NOK (${emoji})`,
-                type: 4,
-              },
-            ],
-          });
-
-          // Update the bot's nickname
-          me.setNickname(`${cryptofiri} $${fixedMedianCoinGecko} (${emoji})`)
+          client.user
+            ?.setPresence({
+              activities: [
+                {
+                  name: `${medianFiri} NOK`,
+                  type: 4,
+                },
+              ],
+            })
             .then(() =>
               console.log(
-                `Set nickname to ${cryptofiri} $${fixedMedianCoinGecko} in guild: ${guild.name}`
+                `Set presence to ${cryptofiri} ${medianFiri} NOK in guild: ${guild.name}`
+              )
+            );
+
+          // Update the bot's nickname
+          me.setNickname(`${cryptofiri} $${medianCoinGecko} (${emoji})`)
+            .then(() =>
+              console.log(
+                `Set nickname to ${cryptofiri} $${medianCoinGecko} in guild: ${guild.name}`
               )
             )
             .catch(console.error);
