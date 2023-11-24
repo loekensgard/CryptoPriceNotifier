@@ -55,14 +55,14 @@ client.on("ready", () => {
           client.user?.setPresence({
             activities: [
               {
-                name: `${cryptofiri} $${fixedMedianCoinGecko} ${emoji}`,
+                name: `${cryptofiri} $${fixedMedianCoinGecko} (${emoji})`,
                 type: 4,
               },
             ],
           });
 
           // Update the bot's nickname
-          me.setNickname(`${cryptofiri} ${fixedMedianFiri},- ${emoji}`)
+          me.setNickname(`${cryptofiri} ${fixedMedianFiri},- (${emoji})`)
             .then(() =>
               console.log(
                 `Set nickname to ${cryptofiri} ${fixedMedianFiri};- in guild: ${guild.name}`
