@@ -1,13 +1,13 @@
-import { formatNumber } from "../src/utils/formatNumberService.js";
-import { test, it, expect } from "vitest";
+import { formatNumber } from "../src/helpers/formatNumberHelper.js";
+import { describe, test, expect } from "vitest";
 
-test("formatNumber", () => {
-  it("should format number according to the provided locale", () => {
+describe("formatNumber", () => {
+  test("should format number according to nb-NO locale", () => {
     const result = formatNumber(222000, "nb-NO");
-    expect(result).toBe("222 000");
+    expect(result.replace(/\s/g, ' ')).toBe("222 000");
   });
 
-  it("should format number according to the provided locale", () => {
+  test("should format number according to de-DE locale", () => {
     const result = formatNumber(22000, "de-DE");
     expect(result).toBe("22.000");
   });
