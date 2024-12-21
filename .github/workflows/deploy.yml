@@ -30,7 +30,7 @@ jobs:
           tags: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
           file: ./Dockerfile
 
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
