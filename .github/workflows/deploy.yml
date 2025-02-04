@@ -24,7 +24,7 @@ jobs:
           password: ${{ secrets.AZR_PASSWORD }}
 
       - name: Build and push container image to registry
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           tags: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
