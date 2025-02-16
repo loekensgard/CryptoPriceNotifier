@@ -6,6 +6,7 @@ export class NickNameService {
     this.cryptoFiri = cryptoFiri;
     this.cryptoGecko = cryptoGecko;
     this.priceService = priceService;
+    this.updateInterval = null;
   }
 
   async updateNickname(guildId) {
@@ -47,7 +48,7 @@ export class NickNameService {
 
       // Schedule the nickname update with the rate limiter for this guild
       await discordLimiter.key(guildId).schedule(async () => {
-        await me.setNickname(`${this.cryptoFiri} $${prices.coinGecko} (${prices.emoji})`);
+        await me.setNickname(`${this.cryptoFiri} $${prices.coinGecko} ${prices.emoji}`);
         console.log(
           `Set nickname to ${this.cryptoFiri} $${prices.coinGecko} in guild: ${guild.name}`
         );
@@ -58,18 +59,33 @@ export class NickNameService {
   }
 
   async updateAllGuilds() {
-    for (const guild of this.client.guilds.cache.values()) {
-      await this.updateNickname(guild.id);
-    }
+    const updatePromises = this.client.guilds.cache.map(guild => 
+      this.updateNickname(guild.id)
+    );
+    await Promise.allSettled(updatePromises);
   }
 
-  startUpdates(checkInterval = 5000) {
+  startUpdates(interval = 30000) { // Default 30 seconds
+    if (this.updateInterval) {
+      console.warn(`Updates already running for ${this.cryptoFiri}, clearing existing interval`);
+      this.stopUpdates();
+    }
+
     // Initial update for all guilds
     this.updateAllGuilds();
     
     // Set up continuous updates
-    return setInterval(() => {
+    this.updateInterval = setInterval(() => {
       this.updateAllGuilds();
-    }, checkInterval); // Check every 5 seconds by default, but actual updates will be rate limited by Bottleneck
+    }, interval);
+    return this.updateInterval;
+  }
+
+  stopUpdates() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+      console.log(`Stopped nickname updates for ${this.cryptoFiri}`);
+    }
   }
 } 

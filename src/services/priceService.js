@@ -13,6 +13,7 @@ export class PriceService {
       change: null,
       emoji: null
     };
+    this.updateInterval = null;
   }
 
   async updatePrices() {
@@ -42,10 +43,24 @@ export class PriceService {
   }
 
   startUpdates(interval = 30000) { // Default 30 seconds
+    if (this.updateInterval) {
+      console.warn(`Updates already running for ${this.cryptoFiri}, clearing existing interval`);
+      this.stopUpdates();
+    }
+
     // Initial update
     this.updatePrices();
     
     // Set interval for updates
-    return setInterval(() => this.updatePrices(), interval);
+    this.updateInterval = setInterval(() => this.updatePrices(), interval);
+    return this.updateInterval;
+  }
+
+  stopUpdates() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+      console.log(`Stopped price updates for ${this.cryptoFiri}`);
+    }
   }
 } 
