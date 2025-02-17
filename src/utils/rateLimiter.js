@@ -2,10 +2,10 @@ import Bottleneck from 'bottleneck';
 
 // CoinGecko has a rate limit of 10-30 calls/minute for free API
 export const coinGeckoLimiter = new Bottleneck({
-  minTime: 10000, // Minimum time between requests 
+  minTime: 5000, // Minimum time between requests 
   maxConcurrent: 1, // Only allow 1 request at a time
-  reservoir: 20, // Number of requests per minute
-  reservoirRefreshAmount: 20,
+  reservoir: 30, // Number of requests per minute
+  reservoirRefreshAmount: 30,
   reservoirRefreshInterval: 120 * 1000, // Refresh every two minute
 });
 
