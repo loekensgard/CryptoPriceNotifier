@@ -42,7 +42,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: "Deploy NOK notifier"
+      - name: "Deploy Price Notifier"
         uses: azure/aci-deploy@v1
         with:
           resource-group: ${{ secrets.RESOURCE_GROUP }}
@@ -50,22 +50,8 @@ jobs:
           registry-login-server: discordbotspricecheck.azurecr.io
           registry-username: ${{ secrets.AZR_USERNAME }}
           registry-password: ${{ secrets.AZR_PASSWORD }}
-          name: nok-notifier
+          name: price-notifier
           location: "norway east"
-          dns-name-label: "nok-notifier"
-          environment-variables: CRYPTO=ETH CRYPTOGECKO=ethereum
-          secure-environment-variables: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN_ETH }}
-
-      - name: "Deploy USD notifier"
-        uses: azure/aci-deploy@v1
-        with:
-          resource-group: ${{ secrets.RESOURCE_GROUP }}
-          image: discordbotspricecheck.azurecr.io/${{ secrets.AZR_USERNAME }}/price-notifier:${{ github.sha }}
-          registry-login-server: discordbotspricecheck.azurecr.io
-          registry-username: ${{ secrets.AZR_USERNAME }}
-          registry-password: ${{ secrets.AZR_PASSWORD }}
-          name: usd-notifier
-          location: "norway east"
-          dns-name-label: "usd-notifier"
-          environment-variables: CRYPTO=BTC CRYPTOGECKO=bitcoin
-          secure-environment-variables: DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN_BTC }}
+          dns-name-label: "price-notifier"
+          secure-environment-variables: |
+            BOT_CONFIGS=[{"token":"${{ secrets.DISCORD_TOKEN_ETH }}","crypto":"ETH","cryptoGecko":"ethereum"},{"token":"${{ secrets.DISCORD_TOKEN_BTC }}","crypto":"BTC","cryptoGecko":"bitcoin"}]
