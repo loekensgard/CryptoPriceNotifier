@@ -32,9 +32,9 @@ export class PriceService {
         emoji: getEmojiBasedOnPriceChange(changeCoinGecko)
       };
 
-      console.log(`Updated prices for ${this.cryptoFiri} - Firi: ${this.prices.firi} NOK, CoinGecko: $${this.prices.coinGecko}`);
+      console.log(`[${new Date().toISOString()}] Updated prices for ${this.cryptoFiri} - Firi: ${this.prices.firi} NOK, CoinGecko: $${this.prices.coinGecko}`);
     } catch (error) {
-      console.error(`Error updating prices for ${this.cryptoFiri}:`, error);
+      console.error(`[${new Date().toISOString()}] Error updating prices for ${this.cryptoFiri}:`, error);
     }
   }
 
@@ -44,7 +44,7 @@ export class PriceService {
 
   startUpdates(interval = 30000) { // Default 30 seconds
     if (this.updateInterval) {
-      console.warn(`Updates already running for ${this.cryptoFiri}, clearing existing interval`);
+      console.warn(`[${new Date().toISOString()}] Updates already running for ${this.cryptoFiri}, clearing existing interval`);
       this.stopUpdates();
     }
 
@@ -60,7 +60,7 @@ export class PriceService {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
       this.updateInterval = null;
-      console.log(`Stopped price updates for ${this.cryptoFiri}`);
+      console.log(`[${new Date().toISOString()}] Stopped price updates for ${this.cryptoFiri}`);
     }
   }
 } 

@@ -40,19 +40,3 @@ export const getBotConfigs = () => {
         throw error;
     }
 };
-
-// For backwards compatibility with existing code
-export const getToken = () => {
-    const configs = getBotConfigs();
-    return configs[0]?.token;
-};
-
-export const getCryptoFiri = () => {
-    const configs = getBotConfigs();
-    return configs[0]?.crypto ?? "ETH";
-};
-
-export const getCryptoGecko = () => {
-    const configs = getBotConfigs();
-    return configs[0]?.cryptoGecko ?? "ethereum";
-}; 
