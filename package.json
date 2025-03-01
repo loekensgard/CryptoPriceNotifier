@@ -13,10 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "bottleneck": "^2.19.5",
-    "discord.js": "^14.17.3",
+    "discord.js": "^14.18.0",
     "dotenv": "^16.4.7"
   },
   "devDependencies": {
-    "vitest": "^3.0.5"
+    "vitest": "^3.0.7"
   }
 }
