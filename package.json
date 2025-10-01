@@ -14,7 +14,7 @@
   "dependencies": {
     "bottleneck": "^2.19.5",
     "discord.js": "^14.22.1",
-    "dotenv": "^17.2.1"
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "vitest": "^3.2.4"
