@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crypto-price-notifier
+  namespace: crypto-price-notifier
+  labels:
+    app: crypto-price-notifier
+spec:
+  replicas: 1
+  # Bot holds no state; a single replica is correct. Running >1 would
+  # double every Discord nickname/presence update.
+  selector:
+    matchLabels:
+      app: crypto-price-notifier
+  template:
+    metadata:
+      labels:
+        app: crypto-price-notifier
+    spec:
+      # Pull secret for the (private by default) GHCR package.
+      # Remove this block if you make the package public instead.
+      imagePullSecrets:
+        - name: ghcr-pull
+      containers:
+        - name: crypto-price-notifier
+          image: ghcr.io/loekensgard/crypto-price-notifier:main
+          # :main is overwritten on every push to main, so always re-pull.
+          imagePullPolicy: Always
+          env:
+            - name: BOT_CONFIGS
+              valueFrom:
+                secretKeyRef:
+                  name: crypto-price-notifier-secrets
+                  key: BOT_CONFIGS
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              memory: "128Mi"
+      # No Service/Ingress and no probes: the bot opens an outbound
+      # Discord WebSocket and listens on no port.

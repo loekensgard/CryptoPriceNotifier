@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 .env
 settings.json
+
+# Real cluster secret (copied from k8s/secret.example.yaml) — never commit
+k8s/secret.yaml
