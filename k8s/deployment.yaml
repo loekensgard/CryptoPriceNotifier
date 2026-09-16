@@ -21,6 +21,11 @@ spec:
       # Remove this block if you make the package public instead.
       imagePullSecrets:
         - name: ghcr-pull
+      dnsConfig:
+        options:
+          - name: single-request-reopen
+          - name: ndots
+            value: "1"
       containers:
         - name: crypto-price-notifier
           image: ghcr.io/loekensgard/crypto-price-notifier:main
